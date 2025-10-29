@@ -1,0 +1,69 @@
+= Ufiber OLT Basic CLI Commands (V4.10.0)
+
+:toc: left
+:source-highlighter: rouge
+
+_this document makes the assumption that you already have ssh access into the OLT_
+
+== Basic Troubleshooting & Configuration Commands
+
+While logged in via ssh, pressing tab or '?' at any time will bring up the avaiable commands
+
+[source,bash]
+----
+~$
+add            copy           initial-setup  reboot         reset          shutdown       traceroute6
+clear          delete         no             release        restart        telnet
+configure      disconnect     ping           rename         set            terminal
+connect        generate       ping6          renew          show           traceroute
+----
+Within operational mode we have various troubleshooting tools that we can utilize such as ping, traceroute show and reboot. I won't go in to depth here about each option, expore with caution. To make real configuration changes we have to elevate our privilege level.
+
+== Configuration Mode
+
+When we first ssh into the OLT we are in operational mode and must elevate into configuration mode to make changes. This can be done with:
+
+[source,bash]
+----
+~$ configure
+[edit]
+#
+----
+
+As you can see, we are now in configuration mode as denoted by '#'.
+
+Now we can really break things... well not exactly
+
+[source,bash]
+
+----
+#
+comment         commit-confirm  confirm         delete          edit            load            merge           rollback        save            show
+commit          compare         copy            discard         exit            loadkey         rename          run             set
+[edit]
+----
+
+again, there are various options available to us here. Say we wanted to change the hostname of the OLT:
+
+[source,bash]
+----
+set system device-name TEST-NAME
+commit-confirm
+commit-confirm will automatically reboot in 10 minutes unless confirmed
+Proceed? [yes]
+yes
+Type 'confirm' to stop reboot
+confirm
+----
+
+Commit-confirm is an important part of this process. What this does is save a change to the running configuration of the system without commiting it to the boot configuration. Meaning that for whatever reason, say the command we just ran to change the device name, kicked us out of the ssh session, the device would reboot without the change being persistant after 10 minutes. Saving us a truck roll out to the device for physical configuration changes on site. 
+
+Once the configuration change is made and if you were not kicked out of the ssh session, you can then use 'save' to write the changes to the boot file.
+
+[source,bash]
+----
+save
+Saving configuration to '/config/config.boot'...
+Done
+@TEST-NAME#
+----
