@@ -1,0 +1,45 @@
+name: Build PDFs from AsciiDoc
+on:
+  push:
+    paths:
+      - "**/*.adoc"
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: "3.3"
+
+      - name: Install Asciidoctor PDF toolchain
+        run: |
+          gem install asciidoctor asciidoctor-pdf rouge
+
+      - name: Build PDFs
+        run: |
+          mkdir -p pdf
+          shopt -s globstar nullglob
+          for f in **/*.adoc; do
+            base="$(basename "${f%.adoc}")"
+            asciidoctor-pdf \
+              -a toc=left \
+              -a icons=font \
+              -a source-highlighter=rouge \
+              -a pdf-theme=default-with-font-fallbacks \
+              -o "pdf/${base}.pdf" "$f"
+          done
+
+      - name: Commit PDFs to repo
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add pdf
+          git commit -m "Update PDFs [skip ci]" || echo "No PDF changes"
+          git push
