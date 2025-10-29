@@ -2,4 +2,4 @@
 
 ## Index
 
-- [Ufiber OLT CLI Guide](network-cheat-sheets/ufiber-olt-cli-guide.adoc)
+- [Ufiber OLT CLI Guide](all-cheat-sheets/ufiber-olt-cli-guide.adoc)
