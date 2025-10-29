@@ -9,4 +9,4 @@ Here's a few handy quick-reference guides for Ubiquiti, Mikrotik, Cisco and many
 
 | Topic | View Online | PDF |
 |-------|--------------|-----|
-- [Ufiber OLT CLI Guide](all-cheat-sheets/ufiber-olt-cli-guide.adoc)
+| UFiber OLT CLI Guide | [view](all-cheat-sheets/ufiber-olt-cli-guide.adoc) | [Download](pdf/ufiber-olt-cli-guide.pdf) |
